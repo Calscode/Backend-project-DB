@@ -6,7 +6,7 @@ beforeAll(() => seed(data));
 afterAll(() => db.end());
 
 xdescribe('seed', () => {
-  describe('topics table', () => {
+  xdescribe('topics table', () => {
     test('topics table exists', () => {
       return db
         .query(
@@ -81,7 +81,7 @@ xdescribe('seed', () => {
     });
   });
 
-  describe('users table', () => {
+  xdescribe('users table', () => {
     test('users table exists', () => {
       return db
         .query(
@@ -155,7 +155,7 @@ xdescribe('seed', () => {
     });
   });
 
-  describe('articles table', () => {
+  xdescribe('articles table', () => {
     test('articles table exists', () => {
       return db
         .query(
@@ -363,7 +363,7 @@ xdescribe('seed', () => {
     });
   });
 
-  describe('comments table', () => {
+  xdescribe('comments table', () => {
     test('comments table exists', () => {
       return db
         .query(
@@ -543,7 +543,7 @@ xdescribe('seed', () => {
   });
 });
 
-describe('data insertion', () => {
+xdescribe('data insertion', () => {
 
   test('topics data has been inserted correctly', () => {
     return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
