@@ -5,8 +5,8 @@ const data = require('../db/data/test-data/index');
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-xdescribe('seed', () => {
-  xdescribe('topics table', () => {
+describe('seed', () => {
+  describe('topics table', () => {
     test('topics table exists', () => {
       return db
         .query(
@@ -81,7 +81,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('users table', () => {
+  describe('users table', () => {
     test('users table exists', () => {
       return db
         .query(
@@ -155,7 +155,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('articles table', () => {
+  describe('articles table', () => {
     test('articles table exists', () => {
       return db
         .query(
@@ -363,7 +363,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('comments table', () => {
+  describe('comments table', () => {
     test('comments table exists', () => {
       return db
         .query(
@@ -543,7 +543,7 @@ xdescribe('seed', () => {
   });
 });
 
-xdescribe('data insertion', () => {
+describe('data insertion', () => {
 
   test('topics data has been inserted correctly', () => {
     return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
