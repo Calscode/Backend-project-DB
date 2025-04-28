@@ -7,6 +7,7 @@ const request = require("supertest")
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
+
 xdescribe('seed', () => {
   describe('topics table', () => {
     test('topics table exists', () => {
@@ -545,7 +546,7 @@ xdescribe('seed', () => {
   });
 });
 
-xdescribe('data insertion', () => {
+describe('data insertion', () => {
 
   test('topics data has been inserted correctly', () => {
     return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
