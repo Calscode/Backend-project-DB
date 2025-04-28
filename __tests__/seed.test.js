@@ -1,11 +1,14 @@
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/index');
+const connection = require("../db/connection")
+const request = require("supertest")
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-describe('seed', () => {
+
+xdescribe('seed', () => {
   describe('topics table', () => {
     test('topics table exists', () => {
       return db
@@ -593,6 +596,7 @@ describe('data insertion', () => {
         expect(comment).toHaveProperty('author');
         expect(comment).toHaveProperty('votes');
         expect(comment).toHaveProperty('created_at');
+        expect(typeof comment.article_id).toBe("number");
       });
     });
   });

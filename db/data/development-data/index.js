@@ -8,5 +8,5 @@ module.exports = {
     articleData,
     commentData,
     topicData,
-    userData
+    userData,
 };
