@@ -1,5 +1,6 @@
 const {
-  convertTimestampToDate
+  convertTimestampToDate,
+  referenceObject
 } = require("../db/seeds/utils");
 
 xdescribe("convertTimestampToDate", () => {
@@ -36,5 +37,35 @@ xdescribe("convertTimestampToDate", () => {
     const expected = { key: "value" };
     expect(result).toEqual(expected);
   });
+  test("returns an object with article title as key and article id as the value when passed an article with one object", () => {
+    const input = [{
+      article_id: 1,
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existance challenging",
+      created_at: "2020-07-09T20:11:00:000Z",
+      votes: 100,
+      article_img_url: "https://images.pexels.com/photos"
+    }]
+    const result = referenceObject(input)
+    expect(result).toEqual({
+      "Living in the shadow of a great man" : 1
+    })
+  })
+  test("returns an object with the article titles as the keys and the article ids as the values when passed an array containing multiple objects", () => {
+    const input = [{
+      article_id: 1,
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existance challenging",
+      created_at: "2020-07-09T20:11:00.000Z",
+      votes: 100,
+      article_img_url: "https://images.pexels.com/photos"
+    }]
+    const result = referenceObject(input)
+    expect(result).toEqual({"Living in the shadow of a great man" : 1})
+  })
 });
 

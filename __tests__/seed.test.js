@@ -1,12 +1,14 @@
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/index');
+const connection = require("../db/connection")
+const request = require("supertest")
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
 xdescribe('seed', () => {
-  xdescribe('topics table', () => {
+  describe('topics table', () => {
     test('topics table exists', () => {
       return db
         .query(
@@ -81,7 +83,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('users table', () => {
+  describe('users table', () => {
     test('users table exists', () => {
       return db
         .query(
@@ -155,7 +157,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('articles table', () => {
+  describe('articles table', () => {
     test('articles table exists', () => {
       return db
         .query(
@@ -363,7 +365,7 @@ xdescribe('seed', () => {
     });
   });
 
-  xdescribe('comments table', () => {
+  describe('comments table', () => {
     test('comments table exists', () => {
       return db
         .query(
@@ -593,6 +595,7 @@ xdescribe('data insertion', () => {
         expect(comment).toHaveProperty('author');
         expect(comment).toHaveProperty('votes');
         expect(comment).toHaveProperty('created_at');
+        expect(typeof comment.article_id).toBe("number");
       });
     });
   });
