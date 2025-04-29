@@ -4,7 +4,6 @@ const data = require('../db/data/test-data/index');
 const connection = require("../db/connection")
 const request = require("supertest")
 const app = require("../app")
-const db = 
 
 beforeEach(() => {
   return seed(data);
@@ -40,4 +39,15 @@ describe("GET /api", () => {
     })
   })
 })
+  describe("GET /api/articles/:article_id", () => {
+    test("200: Responds with 1 article", () => {
+      return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.article_id).toBe(1)
+        console.log(response.body.article)
+      })
+    })
+  })
 })
