@@ -23,6 +23,20 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Provides an array of all the comments for a specific article(article_id)",
+    "exampleResponse": {
+      "comments": [
+          {
+            "comment_id": 5,
+            "article_id": 1,
+            "body": "I hate streaming noses",
+            "votes": 0,
+            "author": "icellusedkars",
+            "created_at": "2020-11-03T21:00:00.000Z"
+        }
+      ]
+    }
   }
-  
 }

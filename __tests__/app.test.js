@@ -13,8 +13,9 @@ afterAll(() => {
 })
 
 describe("project tests", () => {
+  
   describe("GET /api", () => {
-  test("200: Responds with an object detailing the documentation for each endpoint", () => {
+    test("200: Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -66,6 +67,7 @@ describe("project tests", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Article not found")
+        
       })
     })
     test("400: responds with bad request when article_id is not a number", () => {
@@ -101,4 +103,39 @@ describe("project tests", () => {
   })
   })
   })
-})
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("200: Responds with all comments for 1 article", () => {
+      return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toHaveLength(11)
+        
+      })
+    })
+  })
+  test("404: Responds with not found when article does not exist", () => {
+    return request(app)
+    .get("/api/articles/90001724/comments")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe("Article not found")
+    })
+  })
+  test("400: responds with bad request when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request - article_id must be a number");
+      });
+  });
+  test("200: Responds with a message when there are no comments to inform the client", () => {
+    return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.msg).toBe("No comments found for this article")
+      })
+  })
+  })
