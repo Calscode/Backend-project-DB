@@ -12,8 +12,8 @@ afterAll(() => {
   return connection.end();
 })
 
-describe("GET /api", () => {
-  
+describe("project tests", () => {
+  describe("GET /api", () => {
   test("200: Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
@@ -38,7 +38,7 @@ describe("GET /api", () => {
       })
     })
   })
-})
+  })
   describe("GET /api/articles/:article_id", () => {
     test("200: Responds with 1 article", () => {
       return request(app)
@@ -46,8 +46,59 @@ describe("GET /api", () => {
       .expect(200)
       .then((response) => {
         expect(response.body.article.article_id).toBe(1)
-        console.log(response.body.article)
+        expect(response.body.article).toEqual(
+          {
+            article_id: 1,
+            title: 'Living in the shadow of a great man',
+            topic: 'mitch',
+            author: 'butter_bridge',
+            body: 'I find this existence challenging',
+            created_at: '2020-07-09T20:11:00.000Z',
+            votes: 100,
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+          }
+        )
       })
     })
+    test("404: Responds with not found when article does not exist", () => {
+      return request(app)
+      .get("/api/articles/90001724")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found")
+      })
+    })
+    test("400: responds with bad request when article_id is not a number", () => {
+      return request(app)
+        .get("/api/articles/not-a-number")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Bad request - article_id must be a number");
+        });
+    });
+  })
+  describe("GET /api/articles", () => {
+    test("200: Responds with all articles", () => {
+      return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toHaveLength(13)
+        response.body.articles.forEach((singleArticle) => {
+          expect(singleArticle).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+          expect(singleArticle).not.toHaveProperty("body");
+      })
+    })
+  })
+  })
   })
 })
