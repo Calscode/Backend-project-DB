@@ -9,3 +9,12 @@ Please kindly complete this task with the relevant name for the files depending 
 The clue to your set up is in the example.
 
 Best of luck.
+
+Notes on resubmitting a ticket:
+
+Please try to only have one active branch at once to avoid losing time to merge conflicts.
+When resubmitting a ticket you should:
+Finish the current ticket you are on first
+Follow the normal PR procedure for your current ticket (ensuring you have merged this branch)
+Start a new branch for the resubmission named "<insert ticket number>, <insert brief ticket description>, resubmission"
+Follow the normal PR procedure for this resubmission branch
