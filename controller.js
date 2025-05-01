@@ -1,6 +1,6 @@
 const endpoints = require("./endpoints.json");
 const db = require("./db/connection");
-const { fetchTopics, fetchArticleId, fetchArticles, fetchComments } = require("./model");
+const { fetchTopics, fetchArticleId, fetchArticles, fetchComments, insertComment } = require("./model");
 
 
 exports.getEndpoints = (req, res) => {
@@ -54,6 +54,18 @@ exports.getComments = (req, res, next) => {
            return res.status(200).send({comments: [], msg: "No comments found for this article"})
         }
         res.status(200).send({ comments })
+    })
+    .catch(next)
+}
+exports.postComment = (req, res, next) => {
+    const { username, body } = req.body
+    const { article_id } = req.params
+    if (!username || ! body){
+        return res.status(400).send({msg: "Missing Username or Comment"})
+    }
+    insertComment(article_id, username, body)
+    .then((comment) => {
+        res.status(201).send({ comment });
     })
     .catch(next)
 }

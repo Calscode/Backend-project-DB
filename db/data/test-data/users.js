@@ -21,4 +21,9 @@ module.exports = [
     avatar_url:
       "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
   },
+  {
+    username: "Calvin",
+    name: "Calvin Smith",
+    avatar_url: "https://example.com/avatar.jpg"
+  }
 ];
