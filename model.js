@@ -41,3 +41,14 @@ exports.fetchArticles = () => {
             return result.rows
         })
   }
+  exports.insertComment = (article_id, author, body) => {
+    const query = `
+    INSERT INTO comments (article_id, author, body)
+    VALUES ($1, $2, $3)
+    RETURNING *;`;
+
+    return db.query(query, [article_id, author, body]).then((result) => {
+        return result.rows[0];
+        
+    })
+  }

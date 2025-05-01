@@ -138,4 +138,76 @@ describe("project tests", () => {
       expect(response.body.msg).toBe("No comments found for this article")
       })
   })
+  describe("POST /api/articles/:article_id/comments", () => {
+    test("201: Responds with a newly added message", () => {
+      const newComment = { body: "I really love this comment!",
+        username: "Calvin"
+      }
+      return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        const newlyPostedComment = response.body.comment
+        console.log(newlyPostedComment);
+        expect(newlyPostedComment).toMatchObject({
+          article_id: 2,
+          author: "Calvin",
+          body: "I really love this comment!"
+        })
+        expect(typeof newlyPostedComment.comment_id).toBe("number");
+        expect(typeof newlyPostedComment.created_at).toBe("string");
+        expect(newlyPostedComment.votes).toBe(0);
+      })
+    })
+    test("404: user doesn't exist (author)", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({ username: "invalidUser", body: "Hello!" })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article or User not found");
+        });
+    });
+  
+    test("404: article doesn't exist", () => {
+      return request(app)
+        .post("/api/articles/9999/comments")
+        .send({ username: "butter_bridge", body: "Hello!" })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article or User not found");
+        });
+    });
+  
+    test("400: invalid article_id (not a number)", () => {
+      return request(app)
+        .post("/api/articles/abc/comments")
+        .send({ username: "butter_bridge", body: "Test comment" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid input");
+        });
+    });
   })
+  
+    test("400: missing comment body", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({ username: "butter_bridge" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Missing Username or Comment");
+        });
+    });
+  
+    test("400: missing username", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({ body: "No username!" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Missing Username or Comment");
+        });
+    });
+  });
