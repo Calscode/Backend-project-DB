@@ -149,7 +149,6 @@ describe("project tests", () => {
       .expect(201)
       .then((response) => {
         const newlyPostedComment = response.body.comment
-        console.log(newlyPostedComment);
         expect(newlyPostedComment).toMatchObject({
           article_id: 2,
           author: "Calvin",
@@ -162,7 +161,7 @@ describe("project tests", () => {
     })
     test("404: user doesn't exist (author)", () => {
       return request(app)
-        .post("/api/articles/1/comments")
+        .post("/api/articles/2/comments")
         .send({ username: "invalidUser", body: "Hello!" })
         .expect(404)
         .then((response) => {
@@ -193,7 +192,7 @@ describe("project tests", () => {
   
     test("400: missing comment body", () => {
       return request(app)
-        .post("/api/articles/1/comments")
+        .post("/api/articles/2/comments")
         .send({ username: "butter_bridge" })
         .expect(400)
         .then((response) => {
@@ -203,11 +202,53 @@ describe("project tests", () => {
   
     test("400: missing username", () => {
       return request(app)
-        .post("/api/articles/1/comments")
+        .post("/api/articles/2/comments")
         .send({ body: "No username!" })
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe("Missing Username or Comment");
         });
     });
-  });
+
+
+
+    // describe("PATCH /api/articles/:article_id", () => {
+    //   test("200: Responds with an updated article", () => { 
+    //     const updateArticle = { newBody: "NEW ARTICLE!" }
+    //     return request(app)
+    //     .patch("/api/articles/2")
+    //     .send(updateArticle)
+    //     .expect(200)
+    //     .then((response) => {
+    //       const updatedArticle = response.body.newArticle
+    //       expect(updatedArticle).toMatchObject({
+    //         title: "Sony Vaio; or, The Laptop",
+    //         topic: "mitch",
+    //         author: "icellusedkars",
+    //       })
+    //       expect(updatedArticle.votes).toBe(0)
+    //       expect(typeof updatedArticle.created_at).toBe("string");
+    //     })
+    //   })
+    // })
+    describe("PATCH /api/articles/:article_id", () => {
+      test("200: Responds with an updated vote count", () => {
+        const incomingVotes = { inc_votes: 44 }
+        return request(app)
+        .patch("/api/articles/2")
+        .send(incomingVotes)
+        .expect(200)
+        .then((response) => {
+          const updatedArticle = response.body.updatedArticle
+          expect(updatedArticle).toMatchObject({
+            title: "Sony Vaio; or, The Laptop",
+            topic: "mitch",
+            author: "icellusedkars",
+            votes: 44,
+          })
+          expect(updatedArticle.votes).toBe(44)
+          expect(typeof updatedArticle.created_at).toBe("string");
+        })
+      })
+    })
+  })

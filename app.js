@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express() 
-const { getEndpoints, getTopics, getArticleId, getArticles, getComments, postComment } = require("./controller");
+const { getEndpoints, getTopics, getArticleId, getArticles, getComments, postComment, patchArticle, patchVotes } = require("./controller");
 app.use(express.json());
 
 
@@ -16,8 +16,12 @@ app.get("/api/articles/:article_id/comments", getComments)
 
 app.post("/api/articles/:article_id/comments", postComment)
 
+// app.patch("/api/articles/:article_id", patchArticle)
+
+app.patch("/api/articles/:article_id", patchVotes)
+
 app.use((err, req, res, next) => {
-    console.log("ERROR:", err);
+
   
     if (err.code === "22P02") {
         

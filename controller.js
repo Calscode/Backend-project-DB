@@ -1,19 +1,18 @@
 const endpoints = require("./endpoints.json");
 const db = require("./db/connection");
-const { fetchTopics, fetchArticleId, fetchArticles, fetchComments, insertComment } = require("./model");
+const { fetchTopics, fetchArticleId, fetchArticles, fetchComments, insertComment, updateArticle, updateVotes } = require("./model");
 
 
 exports.getEndpoints = (req, res) => {
     res.status(200).send({endpoints})
-    }
-
+}
 exports.getTopics = (req, res, next) => {
     fetchTopics()
     .then((topics) => {
         res.status(200).send({topics})
     })
     .catch(next);
-   }
+}
 exports.getArticleId = (req, res, next) => {
     const article_id = req.params.article_id
     
@@ -66,6 +65,32 @@ exports.postComment = (req, res, next) => {
     insertComment(article_id, username, body)
     .then((comment) => {
         res.status(201).send({ comment });
+    })
+    .catch(next)
+}
+// exports.patchArticle = (req, res, next) => {
+//     const { newBody } = req.body
+//     const { article_id } = req.params
+
+//     if (isNaN(article_id)) {
+//         return res.status(400).send({msg: "Bad request - article_id must be a number"});
+//     }
+//     updateArticle(article_id, newBody)
+//     .then((newArticle) => {
+//         res.status(200).send({ newArticle })
+//     })
+//     .catch(next)
+// }
+exports.patchVotes = (req, res, next) => {
+    const { inc_votes } = req.body
+    const { article_id } = req.params
+
+    if (isNaN(article_id)) {
+        return res.status(400).send({msg: "Bad request - article_id must be a number"});
+    }
+    updateVotes(article_id, inc_votes)
+    .then((updatedArticle) => {
+        res.status(200).send({ updatedArticle })
     })
     .catch(next)
 }
