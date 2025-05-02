@@ -49,6 +49,32 @@ exports.fetchArticles = () => {
 
     return db.query(query, [article_id, author, body]).then((result) => {
         return result.rows[0];
+    })
+  }
+//   exports.updateArticle = (article_id, newBody) => {
+//     const query = `
+//     UPDATE articles
+//     SET body = $1
+//     WHERE article_id = $2
+//     RETURNING *;
+//     `
+//     return db.query(query, [newBody, article_id]).
+//     then((result) => {
+//         console.log(newBody);
         
+//         return result.rows[0];
+//     })
+// }
+    exports.updateVotes = (article_id, inc_votes) => {
+    const query = `
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *;
+    `
+    return db.query(query, [inc_votes, article_id]).
+    then((result) => {
+        console.log(result.rows[0], "<-------")
+        return result.rows[0]
     })
   }
