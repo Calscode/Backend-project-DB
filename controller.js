@@ -1,6 +1,6 @@
 const endpoints = require("./endpoints.json");
 const db = require("./db/connection");
-const { fetchTopics, fetchArticleId, fetchArticles, fetchComments, insertComment, updateArticle, updateVotes } = require("./model");
+const { fetchTopics, fetchArticleId, fetchArticles, fetchComments, insertComment, updateVotes, removeComment, fetchUsers } = require("./model");
 
 
 exports.getEndpoints = (req, res) => {
@@ -29,12 +29,14 @@ exports.getArticleId = (req, res, next) => {
     .catch(next)
 }
 exports.getArticles = (req, res, next) => {
-    fetchArticles()
-    .then((articles) => {
-        res.status(200).send({articles})
-    })
-    .catch(next)
-}
+    const { sort_by = "created_at", order = "desc" } = req.query;
+  
+    fetchArticles(sort_by, order)
+      .then((articles) => {
+        res.status(200).send({ articles });
+      })
+      .catch(next);
+  };
 exports.getComments = (req, res, next) => {
     const article_id = req.params.article_id
         if (isNaN(article_id)) {
@@ -68,19 +70,6 @@ exports.postComment = (req, res, next) => {
     })
     .catch(next)
 }
-// exports.patchArticle = (req, res, next) => {
-//     const { newBody } = req.body
-//     const { article_id } = req.params
-
-//     if (isNaN(article_id)) {
-//         return res.status(400).send({msg: "Bad request - article_id must be a number"});
-//     }
-//     updateArticle(article_id, newBody)
-//     .then((newArticle) => {
-//         res.status(200).send({ newArticle })
-//     })
-//     .catch(next)
-// }
 exports.patchVotes = (req, res, next) => {
     const { inc_votes } = req.body
     const { article_id } = req.params
@@ -93,4 +82,26 @@ exports.patchVotes = (req, res, next) => {
         res.status(200).send({ updatedArticle })
     })
     .catch(next)
+}
+exports.deleteComment = (req, res, next) => {
+    const comment_id = req.params.comment_id
+
+    if (isNaN(comment_id)) {
+        return res.status(400).send({msg: "Bad request - comment_id must be a number"});
+    }
+    removeComment(comment_id)
+    .then((deletedComment) => {
+      if (!deletedComment.length) {
+        return res.status(404).send({ msg: "Comment not found" });
+      }
+      res.status(204).send();
+    })
+    .catch(next);
+};
+exports.getUsers = (req, res, next) => {
+    fetchUsers()
+    .then((users) => {
+        res.status(200).send({users})
+    })
+    .catch(next);
 }

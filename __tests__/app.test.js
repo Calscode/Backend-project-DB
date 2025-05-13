@@ -80,7 +80,7 @@ describe("project tests", () => {
     });
   })
   describe("GET /api/articles", () => {
-    test("200: Responds with all articles", () => {
+    test("200: Responds with all articles excluding body", () => {
       return request(app)
       .get("/api/articles")
       .expect(200)
@@ -102,6 +102,32 @@ describe("project tests", () => {
     })
   })
   })
+  test("200: returns articles sorted by title ASC", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("title", { ascending: true });
+      });
+  });
+  test("200: returns articles sorted by votes DESC", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("400: returns error for invalid sort_by column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort_by query");
+      });
+  });
   })
   describe("GET /api/articles/:article_id/comments", () => {
     test("200: Responds with all comments for 1 article", () => {
@@ -209,28 +235,6 @@ describe("project tests", () => {
           expect(response.body.msg).toBe("Missing Username or Comment");
         });
     });
-
-
-
-    // describe("PATCH /api/articles/:article_id", () => {
-    //   test("200: Responds with an updated article", () => { 
-    //     const updateArticle = { newBody: "NEW ARTICLE!" }
-    //     return request(app)
-    //     .patch("/api/articles/2")
-    //     .send(updateArticle)
-    //     .expect(200)
-    //     .then((response) => {
-    //       const updatedArticle = response.body.newArticle
-    //       expect(updatedArticle).toMatchObject({
-    //         title: "Sony Vaio; or, The Laptop",
-    //         topic: "mitch",
-    //         author: "icellusedkars",
-    //       })
-    //       expect(updatedArticle.votes).toBe(0)
-    //       expect(typeof updatedArticle.created_at).toBe("string");
-    //     })
-    //   })
-    // })
     describe("PATCH /api/articles/:article_id", () => {
       test("200: Responds with an updated vote count", () => {
         const incomingVotes = { inc_votes: 44 }
@@ -251,4 +255,81 @@ describe("project tests", () => {
         })
       })
     })
-  })
+    describe("DELETE /api/comments/:comment_id", () => {
+      test("204: sucessfully deletes a comment", () => {
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+      })
+      test("400: invalid comment_id", () => {
+        return request(app)
+          .delete("/api/comments/not-a-number")
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("Bad request - comment_id must be a number");
+          });
+      });
+    
+      test("404: non-existent comment_id", () => {
+        return request(app)
+          .delete("/api/comments/9999") 
+          .expect(404)
+          .then((response) => {
+            expect(response.body.msg).toBe("Comment not found");
+          });
+      });
+    });
+   describe("GET /api/users" , () => {
+    test("200: responds with an array of user objects with username, name, and avatar_url", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          expect(Array.isArray(response.body.users)).toBe(true);
+          expect(response.body.users.length).toBeGreaterThan(0);
+          response.body.users.forEach((user) => {
+              expect(user).toMatchObject({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+          });
+          });
+        });
+    });
+    test("405: POST is not allowed", () => {
+      return request(app)
+        .post("/api/users")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Method not allowed");
+        });
+    });
+  
+    test("405: PUT is not allowed", () => {
+      return request(app)
+        .put("/api/users")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Method not allowed");
+        });
+    });
+  
+    test("405: PATCH is not allowed", () => {
+      return request(app)
+        .patch("/api/users")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Method not allowed");
+        });
+    });
+  
+    test("405: DELETE is not allowed", () => {
+      return request(app)
+        .delete("/api/users")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Method not allowed");
+        });
+    });
+  }) 
