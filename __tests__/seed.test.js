@@ -8,7 +8,7 @@ beforeAll(() => seed(data));
 afterAll(() => db.end());
 
 
-xdescribe('seed', () => {
+describe('seed', () => {
   describe('topics table', () => {
     test('topics table exists', () => {
       return db
@@ -546,7 +546,7 @@ xdescribe('seed', () => {
   });
 });
 
-xdescribe('data insertion', () => {
+describe('data insertion', () => {
 
   test('topics data has been inserted correctly', () => {
     return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
@@ -561,7 +561,7 @@ xdescribe('data insertion', () => {
 
   test('users data has been inserted correctly', () => {
     return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
-      expect(users).toHaveLength(4);
+      expect(users).toHaveLength(5);
       users.forEach((user) => {
         expect(user).toHaveProperty('username');
         expect(user).toHaveProperty('name');

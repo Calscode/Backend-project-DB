@@ -21,22 +21,19 @@ exports.getArticleId = (req, res, next) => {
     }
     fetchArticleId(article_id)
     .then((article) => {
-        if (!article) {
-            return res.status(404).send({ msg: "Article not found"});
-        }
         res.status(200).send({article})
     })
     .catch(next)
 }
 exports.getArticles = (req, res, next) => {
-    const { sort_by = "created_at", order = "desc" } = req.query;
-  
-    fetchArticles(sort_by, order)
-      .then((articles) => {
-        res.status(200).send({ articles });
-      })
-      .catch(next);
-  };
+  const { sort_by = "created_at", order = "desc" } = req.query;
+
+  fetchArticles(sort_by, order)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
+};
 exports.getComments = (req, res, next) => {
     const article_id = req.params.article_id
         if (isNaN(article_id)) {

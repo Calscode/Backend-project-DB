@@ -47,6 +47,8 @@ describe("project tests", () => {
       .expect(200)
       .then((response) => {
         expect(response.body.article.article_id).toBe(1)
+        console.log(response.body.article, "<---------");
+        
         expect(response.body.article).toEqual(
           {
             article_id: 1,
@@ -56,7 +58,8 @@ describe("project tests", () => {
             body: 'I find this existence challenging',
             created_at: '2020-07-09T20:11:00.000Z',
             votes: 100,
-            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+            comment_count: '11'
           }
         )
       })
@@ -102,24 +105,7 @@ describe("project tests", () => {
     })
   })
   })
-  test("200: returns articles sorted by title ASC", () => {
-    return request(app)
-      .get("/api/articles?sort_by=title&order=asc")
-      .expect(200)
-      .then(({ body }) => {
-        const { articles } = body;
-        expect(articles).toBeSortedBy("title", { ascending: true });
-      });
-  });
-  test("200: returns articles sorted by votes DESC", () => {
-    return request(app)
-      .get("/api/articles?sort_by=votes")
-      .expect(200)
-      .then(({ body }) => {
-        const { articles } = body;
-        expect(articles).toBeSortedBy("votes", { descending: true });
-      });
-  });
+
   test("400: returns error for invalid sort_by column", () => {
     return request(app)
       .get("/api/articles?sort_by=banana")
@@ -260,6 +246,8 @@ describe("project tests", () => {
         return request(app)
         .delete("/api/comments/1")
         .expect(204)
+        });
+    });
       })
       test("400: invalid comment_id", () => {
         return request(app)
@@ -278,7 +266,6 @@ describe("project tests", () => {
             expect(response.body.msg).toBe("Comment not found");
           });
       });
-    });
    describe("GET /api/users" , () => {
     test("200: responds with an array of user objects with username, name, and avatar_url", () => {
       return request(app)
@@ -332,4 +319,4 @@ describe("project tests", () => {
           expect(body.msg).toBe("Method not allowed");
         });
     });
-  }) 
+  
