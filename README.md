@@ -10,11 +10,11 @@ The clue to your set up is in the example.
 
 Best of luck.
 
-Notes on resubmitting a ticket:
+A link to the hosted project can be found below:
+https://nc-news-project-q9w2.onrender.com
 
-Please try to only have one active branch at once to avoid losing time to merge conflicts.
-When resubmitting a ticket you should:
-Finish the current ticket you are on first
-Follow the normal PR procedure for your current ticket (ensuring you have merged this branch)
-Start a new branch for the resubmission named "<insert ticket number>, <insert brief ticket description>, resubmission"
-Follow the normal PR procedure for this resubmission branch
+The project itself is a news application that would allow one to access certain endpoints to find articles, comments and users etc.
+
+If one was to clone it, it could be found at this link  https://github.com/Calscode/Backend-project-DB
+You would need to do npm install to install all of the relevant dependencies.
+The code was done with Node v23.10.0 and Postgres psql (PostgreSQL) 14.17 (Homebrew).
